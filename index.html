@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Knockout Demo</title>
+    <script src="scripts/libs/require.js"></script>
+    <script type="text/javascript">
+        require.config({
+            baseUrl: 'scripts',
+            paths: {
+                knockout: "./libs/knockout-3.4.0",
+                jquery: "./libs/jquery-2.2.3"
+            }
+
+        });
+
+
+
+        requirejs(['./controller/logic', 'jquery', 'knockout'], function(controller, $, ko) {
+
+            $(document).ready(function() {
+
+                ko.applyBindings(controller.app);
+
+
+            })
+
+        });
+
+    </script>
+
+
+
+    <body>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Account Number</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+                <tr>
+                    <td data-bind="text: myAccount.id()"></td>
+                    <td data-bind="text: myAccount.name()"></td>
+                    <td data-bind="text: myAccount.description()"></td>
+                    <td data-bind="text: myAccount.balance()"></td>
+                </tr>
+
+
+
+
+            </tbody>
+        </table>
+
+
+
+
+
+        <br>
+
+
+
+
+
+
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Transactions Number</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: transactions">
+                <tr>
+                    <td data-bind="text: $data.id"></td>
+                    <td data-bind="text: $data.name"></td>
+                    <td data-bind="text: $data.amount"></td>
+                </tr>
+
+
+
+
+            </tbody>
+        </table>
+
+
+
+        <h3 data-bind="text: runningTotal"> </h3>
+
+        <br>
+
+
+
+        <div data-bind="foreach: transactions">
+            <div>
+
+                <input data-bind="value: id">
+
+                <input data-bind="value: name">
+
+                <input data-bind="value: amount">
+                <button data-bind="click: $parent.removeTransaction">Delete Transaction</button>
+
+            </div>
+        </div>
+
+
+        <br>
+
+        <div data-bind="with: four">
+
+
+
+            <input data-bind="value: id">
+
+            <input data-bind="value: name">
+
+            <input data-bind="value: amount">
+
+
+        </div>
+
+        <button data-bind="click: addTransaction">Add Transaction</button>
+
+
+    </body>
+
+</html>
