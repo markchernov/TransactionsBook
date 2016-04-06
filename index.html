@@ -11,22 +11,28 @@
             paths: {
                 knockout: "./libs/knockout-3.4.0",
                 jquery: "./libs/jquery-2.2.3",
-                validation: "./libs/knockout.validation"
+                validation: "./libs/knockout.validation",
+                moment: "./libs/moment.min",
+                controller: "./controller/logic"
+                
             }
 
         });
 
 
 
-        requirejs(['./controller/logic', 'jquery', 'knockout'], function(controller, $, ko) {
+        requirejs([ 'jquery', 'knockout', 'moment','validation','controller'], function( $, ko, moment, validation,controller) {
 
-            $(document).ready(function() {
-
-                ko.applyBindings(controller.app);
-
-
+     /*       $(document).ready(function() {
+              ko.applyBindings(controller.app);
             })
-
+*/
+            
+             ko.applyBindings(controller);
+            
+            
+    
+            
         });
 
     </script>
@@ -35,6 +41,8 @@
 
     <body>
 
+        <h3>My Account Info:</h3>
+        
         <table>
             <thead>
                 <tr>
@@ -61,16 +69,17 @@
         </table>
 
 
-
+        
 
 
         <br>
 
+        
+            <h3>Total number of transactions:</h3>
 
+           <h3 data-bind="text: transactions().length"></h3>
 
-
-
-
+          <br>
 
 
         <table>
@@ -98,7 +107,7 @@
 
 
 
-       <!-- <h3 data-bind="text: runningTotal"></h3>-->
+       
 
         <br>
 
@@ -116,6 +125,7 @@
                 <input data-bind="value: date">
                 
                 <button data-bind="click: $parent.removeTransaction">Delete Transaction</button>
+               <!-- <button data-bind="click: $parent.removeTransaction">Update Transaction</button>-->
 
             </div>
         </div>
@@ -133,7 +143,7 @@
 
             <input data-bind="value: amount">
             
-            <input data-bind="value: date"><button data-bind="click: $parent.addTransaction">Add Transaction</button>
+            <input type="date" data-bind="value: date"><button data-bind="click: $parent.addTransaction">Add Transaction</button>
 
 
         </div>

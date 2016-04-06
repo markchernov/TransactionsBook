@@ -1,15 +1,27 @@
+if (typeof define !== 'function') {
+    var define = require('../libs/amdefine')(module)
+}
+
+console.log('in start logic.js');
 
 /*******************************************************  
     CONSTRUCTORS
   ******************************************************* */
 
-//  define name of the modeule, add dependencies 
-define('./controller/logic', ['require', 'exports', 'knockout', 'validation'], function (require, exports, ko) {   
+//  define name of the module, add dependencies 
+define('controller', ['require', 'exports', 'knockout', 'validation', 'moment'], function (require, exports, ko, validation, moment) {   
 
-    console.log('in start logic.js')
+    console.log('in define logic.js')
 
- // ko.validation.init()
-    
+ /*ko.validation.init({
+        insertMessages: false,
+        decorateInputElement: true,
+        errorElementClass: 'has-error',
+        messagesOnModified: false,
+        decorateElementOnModified: false,
+        decorateElement: true
+    });
+    */
     
     
     
@@ -29,8 +41,10 @@ define('./controller/logic', ['require', 'exports', 'knockout', 'validation'], f
         this.id = ko.observable(id);
         this.name = ko.observable(name);
         /*this.amount = ko.observable(parseInt(amount));*/
-        this.amount = ko.observable(amount).extend({number: true, required: true});
-        this.date = ko.observable(date);
+        this.amount = ko.observable(parseInt(amount)).extend({number: true, required: true});
+        
+        //this.date = new Date;
+        this.date = ko.observable(moment(date)).extend({ date: true });
 
 
     }
@@ -38,9 +52,9 @@ define('./controller/logic', ['require', 'exports', 'knockout', 'validation'], f
 /*******************************************************  
     OBJECTS
   ******************************************************* */
-    var one = new Transaction(1, "Transaction one", 50, new Date());
-    var two = new Transaction(2, "Transaction two", 650, new Date())
-    var three = new Transaction(3, "Transaction three", 70, new Date())
+    var one = new Transaction(1, "Transaction one", 50, "2011-10-10 17:05:14");
+    var two = new Transaction(2, "Transaction two", 650, 1360002924000)
+    var three = new Transaction(3, "Transaction three", 70, moment())
     var four = new Transaction(4, "Transaction four", 80, new Date())
 
 
@@ -86,17 +100,16 @@ define('./controller/logic', ['require', 'exports', 'knockout', 'validation'], f
 
     //  export object to make my data available to knockout   html data-binds   
 
-    var app = {
 
-        four: four,
-        transactions: transactions,
-        addTransaction: addTransaction,
-        removeTransaction: removeTransaction,
-        runningTotal: runningTotal,
-        myAccount: myAccount
-    }
+        exports.four= four;
+        exports.transactions= transactions;
+        exports.addTransaction= addTransaction;
+        exports.removeTransaction= removeTransaction;
+        exports.runningTotal= runningTotal;
+        exports.myAccount= myAccount;
+   
 
     console.log("bindings applied");
 
-    exports.app = app;
+   
 });
