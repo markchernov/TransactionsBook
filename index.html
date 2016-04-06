@@ -10,7 +10,8 @@
             baseUrl: 'scripts',
             paths: {
                 knockout: "./libs/knockout-3.4.0",
-                jquery: "./libs/jquery-2.2.3"
+                jquery: "./libs/jquery-2.2.3",
+                validation: "./libs/knockout.validation"
             }
 
         });
@@ -30,7 +31,7 @@
 
     </script>
 
-
+    </head>
 
     <body>
 
@@ -38,7 +39,7 @@
             <thead>
                 <tr>
                     <th>Account Number</th>
-                    <th>Name</th>
+                    <th>User Name</th>
                     <th>Description</th>
                     <th>Total</th>
                 </tr>
@@ -78,6 +79,7 @@
                     <th>Transactions Number</th>
                     <th>Description</th>
                     <th>Amount</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody data-bind="foreach: transactions">
@@ -85,6 +87,7 @@
                     <td data-bind="text: $data.id"></td>
                     <td data-bind="text: $data.name"></td>
                     <td data-bind="text: $data.amount"></td>
+                    <td data-bind="text: $data.date"></td>
                 </tr>
 
 
@@ -95,7 +98,7 @@
 
 
 
-        <h3 data-bind="text: runningTotal"> </h3>
+       <!-- <h3 data-bind="text: runningTotal"></h3>-->
 
         <br>
 
@@ -109,6 +112,9 @@
                 <input data-bind="value: name">
 
                 <input data-bind="value: amount">
+                
+                <input data-bind="value: date">
+                
                 <button data-bind="click: $parent.removeTransaction">Delete Transaction</button>
 
             </div>
@@ -126,11 +132,15 @@
             <input data-bind="value: name">
 
             <input data-bind="value: amount">
+            
+            <input data-bind="value: date"><button data-bind="click: $parent.addTransaction">Add Transaction</button>
 
 
         </div>
+        
+        <br>
 
-        <button data-bind="click: addTransaction">Add Transaction</button>
+       
 
 
     </body>
