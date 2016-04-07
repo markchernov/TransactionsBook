@@ -2,6 +2,10 @@
 <html>
 
 <head>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+
     <meta charset="utf-8" />
     <title>Knockout Demo</title>
     <script src="scripts/libs/require.js"></script>
@@ -14,145 +18,160 @@
                 validation: "./libs/knockout.validation",
                 moment: "./libs/moment.min",
                 controller: "./controller/logic"
-                
+
             }
 
         });
 
 
 
-        requirejs([ 'jquery', 'knockout', 'moment','validation','controller'], function( $, ko, moment, validation,controller) {
+        requirejs(['jquery', 'knockout', 'moment', 'validation', 'controller'], function($, ko, moment, validation, controller) {
 
-     /*       $(document).ready(function() {
+            /*       $(document).ready(function() {
               ko.applyBindings(controller.app);
             })
 */
-            
-             ko.applyBindings(controller);
-            
-            
-    
-            
+
+            ko.applyBindings(controller);
+
+
+
+
         });
 
     </script>
 
-    </head>
+</head>
 
-    <body>
+<body>
 
-        <h3>My Account Info:</h3>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Account Number</th>
-                    <th>User Name</th>
-                    <th>Description</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-
-
-            <tbody>
-                <tr>
-                    <td data-bind="text: myAccount.id()"></td>
-                    <td data-bind="text: myAccount.name()"></td>
-                    <td data-bind="text: myAccount.description()"></td>
-                    <td data-bind="text: myAccount.balance()"></td>
-                </tr>
-
-
-
-
-            </tbody>
-        </table>
-
+    <div class="container">
 
         
-
-
-        <br>
-
+        <h1>Transactions Book <small>My Single Page Knockout.js App</small></h1>
         
-            <h3>Total number of transactions:</h3>
+        
+        <div class="jumbotron">
 
-           <h3 data-bind="text: transactions().length"></h3>
+            <h3>My Account Info:</h3>
 
-          <br>
-
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Transactions Number</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody data-bind="foreach: transactions">
-                <tr>
-                    <td data-bind="text: $data.id"></td>
-                    <td data-bind="text: $data.name"></td>
-                    <td data-bind="text: $data.amount"></td>
-                    <td data-bind="text: $data.date"></td>
-                </tr>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Account Number</th>
+                        <th>User Name</th>
+                        <th>Description</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
 
 
-
-
-            </tbody>
-        </table>
+                <tbody>
+                    <tr>
+                        <td data-bind="text: myAccount.id()"></td>
+                        <td data-bind="text: myAccount.name()"></td>
+                        <td data-bind="text: myAccount.description()"></td>
+                        <td data-bind="text: myAccount.balance()"></td>
+                    </tr>
 
 
 
-       
 
-        <br>
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <div class="jumbotron">
+
+
+            <h3>Total number of transactions:
+
+            <span data-bind="text: transactions().length"></span></h3>
+
+            
+
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Transactions Number</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: transactions">
+                    <tr>
+                        <td data-bind="text: $data.id"></td>
+                        <td data-bind="text: $data.name"></td>
+                        <td data-bind="text: $data.amount"></td>
+                        <td data-bind="text: $data.date"></td>
+                    </tr>
 
 
 
-        <div data-bind="foreach: transactions">
-            <div>
 
-                <input data-bind="value: id">
+                </tbody>
+            </table>
 
-                <input data-bind="value: name">
 
-                <input data-bind="value: amount">
-                
-                <input data-bind="value: date">
-                
-                <button data-bind="click: $parent.removeTransaction">Delete Transaction</button>
-               <!-- <button data-bind="click: $parent.removeTransaction">Update Transaction</button>-->
+        </div>
+
+                <div class="jumbotron">
+
+            <h3>Add new transactions:</h3>
+
+            <div data-bind="with: four" class="form-inline">
+
+
+
+                <input data-bind="value: id" class="form-control">
+
+                <input data-bind="value: name" class="form-control">
+
+                <input data-bind="value: amount" class="form-control">
+
+                <input type="date" data-bind="value: date" class="form-control">
+                <button data-bind="click: $parent.addTransaction" class="btn btn-default">Add New Transaction</button>
+
+
+            </div>
+
+        </div>
+        
+        
+        
+        
+        
+        <div class="jumbotron">
+            
+            <h3>Update transactions:</h3>
+
+            <div data-bind="foreach: transactions" class="form-inline" >
+
+
+                <input data-bind="value: id" class="form-control">
+
+                <input data-bind="value: name" class="form-control">
+
+                <input data-bind="value: amount" class="form-control">
+
+                <input data-bind="value: date" class="form-control">
+
+                <button data-bind="click: $parent.removeTransaction" class="btn btn-default">Delete Transaction</button>
+                <!-- <button data-bind="click: $parent.removeTransaction">Update Transaction</button>-->
 
             </div>
         </div>
 
 
-        <br>
-
-        <div data-bind="with: four">
 
 
 
-            <input data-bind="value: id">
+    </div>
 
-            <input data-bind="value: name">
-
-            <input data-bind="value: amount">
-            
-            <input type="date" data-bind="value: date"><button data-bind="click: $parent.addTransaction">Add Transaction</button>
-
-
-        </div>
-        
-        <br>
-
-       
-
-
-    </body>
+</body>
 
 </html>
