@@ -46,9 +46,17 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
         //this.date = new Date;
         this.date = ko.observable(moment(date)).extend({ date: true });
 
-
+        
     }
 
+    
+    Transaction.prototype.toJSON = function() {     
+    
+    return {  id: this.id(), name: this.name(), amount: this.amount(), date : this.date() }
+    
+    
+    }
+    
 /*******************************************************  
     OBJECTS
   ******************************************************* */
@@ -61,7 +69,11 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
     var transactions = ko.observableArray([one, two, three]);
 
-  
+    var bankTransactions = ko.observableArray([one, two, three]);
+    
+    var persistedBankTransactions = [];
+    
+    
 
     var runningTotal = ko.pureComputed(function () {
 
@@ -83,6 +95,61 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
     FUNCTIONS
   ******************************************************* */
     
+    function persistBankTransactionsInLocalStrorage() {
+        
+        
+        console.log("inside updateBankTransaction function");
+        
+        bankTransactions.push(new Transaction(four.id(), four.name(), four.amount(), four.date()));
+        
+        
+        bankTransactions().forEach(function (value) {
+            
+        //bankTransactions.remove(value);  
+            
+        console.log(value);    
+             
+        localStorage.setItem(value.id() , JSON.stringify(value));
+
+        //var myTransaction = JSON.parse(localStorage.getItem(value.id()));
+            
+        //var myTransaction =  localStorage.getItem(value.id());   
+
+        //console.log(myTransaction.name);
+        
+       });
+        
+        
+        retriveBankTransactionFromLocalStorage();
+        
+    }
+    
+    
+    function retriveBankTransactionFromLocalStorage() {
+        
+        
+        console.log("inside retriveBankTransactionFromLocalStorage function");       
+        
+        bankTransactions().forEach(function (value) {
+            
+            
+        console.log(value);    
+             
+
+        var myTransaction = JSON.parse(localStorage.getItem(value.id()));
+            
+        persistedBankTransactions.push(myTransaction);   
+
+        console.log("This is my array of plain JS objects size:  " + persistedBankTransactions.length);
+        
+       });
+        
+    }
+    
+    
+    
+    
+    
     
     
     function removeTransaction(data, evt) {
@@ -93,12 +160,18 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
     function addTransaction() {
         
         transactions.push(new Transaction(four.id(), four.name(), four.amount(), four.date()));
+        
+        persistBankTransactionsInLocalStrorage(); 
     }
 
     
-
+    
 
      
+    
+    
+    
+    
 
     /*******************************************************  
     AJAX CALL TEST
@@ -116,6 +189,9 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
     
     var myFood = new Food(1001, "My Test Food");    
     
+    
+    
+    
     function updateFood(data, evt) {
        
     console.log("inside updateFood function"); 
@@ -123,21 +199,24 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
     console.log(data);  
         
     var url =  'http://localhost:8080/NutriTrac/rest/food/' +  myFood.ndbno();  
-        
+     
+    //var url =  'http://feeds.financialcontent.com/account_name/JSQuote?Ticker=MSFT';    
   
     $.get(url, function (myData) {
 
-             console.log("in AJAX get");
+            console.log("in AJAX get");
              console.log("My data from AJAX call: " + myData.name);  
-          
-             /*myFood.ndbno = myData.ndbno;
-             myFood.name = myData.name;*/
         
              myFood.ndbno(myData.ndbno);
              myFood.name(myData.name);
         
         
              console.log("My food object after AJAX call: " + myFood.name());  
+       
+        
+        
+       // console.log("My data from AJAX call: " + myData);  
+        
          
          });
 
@@ -160,6 +239,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
         exports.myAccount= myAccount;
         exports.myFood= myFood;
         exports.updateFood= updateFood;
+        //exports.persistedBankTransactions = persistedBankTransactions;
    
 
     console.log("bindings applied");
