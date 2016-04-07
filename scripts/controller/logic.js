@@ -9,7 +9,7 @@ console.log('in start logic.js');
   ******************************************************* */
 
 //  define name of the module, add dependencies 
-define('controller', ['require', 'exports', 'knockout', 'validation', 'moment'], function (require, exports, ko, validation, moment) {   
+define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 'moment'], function (require, exports, $, ko, validation, moment) {   
 
     console.log('in define logic.js')
 
@@ -95,18 +95,71 @@ define('controller', ['require', 'exports', 'knockout', 'validation', 'moment'],
         transactions.push(new Transaction(four.id(), four.name(), four.amount(), four.date()));
     }
 
-    console.log(ko);
+    
 
 
-    //  export object to make my data available to knockout   html data-binds   
+     
 
+    /*******************************************************  
+    AJAX CALL TEST
+  ******************************************************* */ 
+         
+    function Food(ndbno, name) {
+        
+        this.ndbno = ko.observable(ndbno);
+        this.name = ko.observable(name);
+        
+        
+           }
 
+          
+    
+    var myFood = new Food(1001, "My Test Food");    
+    
+    function updateFood(data, evt) {
+       
+    console.log("inside updateFood function"); 
+        
+    console.log(data);  
+        
+    var url =  'http://localhost:8080/NutriTrac/rest/food/' +  myFood.ndbno();  
+        
+  
+    $.get(url, function (myData) {
+
+             console.log("in AJAX get");
+             console.log("My data from AJAX call: " + myData.name);  
+          
+             /*myFood.ndbno = myData.ndbno;
+             myFood.name = myData.name;*/
+        
+             myFood.ndbno(myData.ndbno);
+             myFood.name(myData.name);
+        
+        
+             console.log("My food object after AJAX call: " + myFood.name());  
+         
+         });
+
+    
+    } // close update food function
+    
+     console.log(myFood);
+    
+   
+      
+    console.log("This is my observable Food object: " + myFood.name());
+    
+    
+    //  export object to make my data available to knockout   html data-binds  
         exports.four= four;
         exports.transactions= transactions;
         exports.addTransaction= addTransaction;
         exports.removeTransaction= removeTransaction;
         exports.runningTotal= runningTotal;
         exports.myAccount= myAccount;
+        exports.myFood= myFood;
+        exports.updateFood= updateFood;
    
 
     console.log("bindings applied");
