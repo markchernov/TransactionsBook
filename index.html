@@ -17,7 +17,8 @@
                 jquery: "./libs/jquery-2.2.3",
                 validation: "./libs/knockout.validation",
                 moment: "./libs/moment.min",
-                controller: "./controller/logic"
+                controller: "./controller/logic",
+                mapping: "./libs/knockout.mapping-latest"
 
             }
 
@@ -25,7 +26,7 @@
 
 
 
-        requirejs(['jquery', 'knockout', 'moment', 'validation', 'controller'], function($, ko, moment, validation, controller) {
+        requirejs(['jquery', 'knockout', 'moment', 'validation', 'controller', 'mapping'], function($, ko, moment, validation, controller, mapping) {
 
             /*       $(document).ready(function() {
               ko.applyBindings(controller.app);
@@ -47,10 +48,10 @@
 
     <div class="container">
 
-        
+
         <h1>Transactions Book <small>My Single Page Knockout.js App</small></h1>
-        
-        
+
+
         <div class="jumbotron">
 
             <h3>My Account Info:</h3>
@@ -90,7 +91,7 @@
 
             <span data-bind="text: transactions().length"></span></h3>
 
-            
+
 
 
             <table class="table table-bordered">
@@ -119,7 +120,7 @@
 
         </div>
 
-                <div class="jumbotron">
+        <div class="jumbotron">
 
             <h3>Add new transactions:</h3>
 
@@ -134,22 +135,23 @@
                 <input data-bind="value: amount" class="form-control">
 
                 <input type="date" data-bind="value: date" class="form-control">
+
                 <button data-bind="click: $parent.addTransaction" class="btn btn-default">Add New Transaction</button>
 
 
             </div>
 
         </div>
-        
-        
-        
-        
-        
+
+
+
+
+
         <div class="jumbotron">
-            
+
             <h3>Update transactions:</h3>
 
-            <div data-bind="foreach: transactions" class="form-inline" >
+            <div data-bind="foreach: transactions" class="form-inline">
 
 
                 <input data-bind="value: id" class="form-control">
@@ -175,10 +177,96 @@
             <button data-bind="click: updateFood" class="btn btn-default">Update Food</button>
             
             </h3>
+
+        </div>
+
+
+
+
+
+        <div class="jumbotron">
+
+
+            <h3>Total number of Bank Transactions:
+
+            <span data-bind="text: persistedBankTransactions().length"></span>
+                
+                Bank Balance:
+                
+            <span data-bind="text: runningBankTotal"></span>
             
-         </div>
+            </h3>
+
+
+
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Transactions Number</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: persistedBankTransactions">
+                    <tr>
+                        <td data-bind="text: $data.id"></td>
+                        <td data-bind="text: $data.name"></td>
+                        <td data-bind="text: $data.amount"></td>
+                        <td data-bind="text: $data.date"></td>
+                    </tr>
+
+
+
+
+                </tbody>
+                
+                
+             
+                
+            </table>
+
+                  <button data-bind="click: retriveBankTransactionsFromLocalStorage" class="btn btn-default">See Bank Transactions</button>
+        </div>
+
+
+        <div class="jumbotron">
+
+            <h3>Add new Bank transactions:</h3>
+
+            <div data-bind="with: four" class="form-inline">
+
+
+
+                <input data-bind="value: id" class="form-control">
+
+                <input data-bind="value: name" class="form-control">
+
+                <input data-bind="value: amount" class="form-control">
+
+                <input type="date" data-bind="value: date" class="form-control">
+
+                <button data-bind="click: $parent.persistBankTransactionsInLocalStorage" class="btn btn-default">Add New Transaction</button>
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
 
     </div>
+
+
+
+
 
 </body>
 
