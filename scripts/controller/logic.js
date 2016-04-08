@@ -135,7 +135,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
             
             //localStorage.setItem(value.id(), JSON.stringify(value));
 
-            localStrorage.setItem(jsonTransaction);
+            localStorage.setItem(value.id(), jsonTransaction);
   
 
             console.log(jsonTransaction);
