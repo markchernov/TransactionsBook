@@ -13,8 +13,8 @@ console.log('in start logic.js');
 define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 'moment', 'mapping'], function (require, exports, $, ko, validation, moment, mapping) {
 
     console.log('in define logic.js')
-    
-    
+
+
 
     /*ko.validation.init({
            insertMessages: false,
@@ -38,12 +38,12 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
 
     }
-    
+
     // create custom toString for testing
-     Account.prototype.toString = function accountToString() {
-     var ret = 'Account Id: ' + this.id() + ' , name: ' + this.name() + ', Description: ' + this.description() + ' , Balance:  ' + runningTotal() + " ";
-     return ret;
-}
+    Account.prototype.toString = function accountToString() {
+        var ret = 'Account Id: ' + this.id() + ' , name: ' + this.name() + ', Description: ' + this.description() + ' , Balance:  ' + runningTotal() + " ";
+        return ret;
+    }
 
 
     function Transaction(id, name, amount, date) {
@@ -94,7 +94,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
     var persistedBankTransactions = ko.observableArray([]);
 
-    //var persistedBankTransactions= [];
+    var unreconciledTransactions = ko.observableArray([]);
 
     var runningTotal = ko.pureComputed(function () {
 
@@ -115,6 +115,18 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
         return result;
     });
 
+    var unreconciledTotal = ko.pureComputed(function () {
+
+        var result = 0;
+        unreconciledTransactions().forEach(function (value) {
+            result += value.amount();
+        });
+        return result;
+    });
+
+
+
+
 
     var myAccount = new Account(10001, "Mark Che", " My Checking Account ", runningTotal, transactions);
 
@@ -125,6 +137,29 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
     /*******************************************************  
       FUNCTIONS
     ******************************************************* */
+    
+    function persistAccountInLocalStorage() {
+
+
+        console.log("inside persistAccountInLocalStorage function");
+
+
+
+            //  Knockout method to convert observable object to pure js object
+            //var jsTransaction = ko.toJS(value);  
+            //  Knockout method to stringify observable object to JSON
+            var jsonMyAccount = ko.toJSON(myAccount);
+
+
+            //localStorage.setItem(value.id(), JSON.stringify(value));
+
+            localStorage.setItem(myAccount.name(), jsonMyAccount);
+
+
+            console.log(jsonMyAccount);
+
+        };  
+    
 
     function persistBankTransactionsInLocalStorage() {
 
@@ -136,17 +171,17 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
         bankTransactions().forEach(function (value) {
 
-    
+
             //  Knockout method to convert observable object to pure js object
             //var jsTransaction = ko.toJS(value);  
             //  Knockout method to stringify observable object to JSON
             var jsonTransaction = ko.toJSON(value);
-            
-            
+
+
             //localStorage.setItem(value.id(), JSON.stringify(value));
 
             localStorage.setItem(value.id(), jsonTransaction);
-  
+
 
             console.log(jsonTransaction);
 
@@ -170,45 +205,90 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
             console.log(key);
 
-           //persistedBankTransactions.push(JSON.parse(localStorage.getItem(key)));
-            
-           // mapping library from JSON back to observable conversion   
-            
+            //persistedBankTransactions.push(JSON.parse(localStorage.getItem(key)));
+
+            // mapping library from JSON back to observable conversion   
+
             console.log(localStorage.getItem(key));
-            
+
             console.log(mapping);
-            
+
             console.log(ko);
-            
+
             //var persistedBankTransactionJSObject = JSON.parse(localStorage.getItem(key));
-            
+
             var Transaction = mapping.fromJSON(localStorage.getItem(key));
 
             persistedBankTransactions.push(Transaction);
-            
-            persistedBankTransactions = persistedBankTransactions.sort(function (left, right) { return left.date() == right.date() ? 0 : (left.date() < right.date() ?  - 1 : 1) }); 
-           
+
+            persistedBankTransactions = persistedBankTransactions.sort(function (left, right) {
+                return left.date() == right.date() ? 0 : (left.date() < right.date() ? -1 : 1)
+            });
+
 
         }
 
-          
+
 
 
     }
-
-
 
     function compareAccounts() {
-    
-        var result = 0;
-        persistedBankTransactions().forEach(function (value) {
-            result += value.amount;
+
+
+        console.log("inside compareAccounts function");
+
+        persistedBankTransactions().forEach(function (object) {
+
+
+
+            unreconciledTransactions.push(object);
+
         });
-        return result;
-    
-    
-    
-    }
+
+
+        console.log("This is unreconciledTransactions: " + unreconciledTransactions());
+
+        console.log("This is persistedBankTransactions: " + persistedBankTransactions());
+
+        transactions().forEach(function (value) {
+
+            console.log("This is my transaction amount: " + value.amount());
+
+
+            for (var key in persistedBankTransactions()) {
+
+
+                var obj = persistedBankTransactions()[key];
+
+
+                console.log("This is bank amount: " + obj.amount());
+
+                if (value.amount() === obj.amount()) {
+
+
+                    console.log("Check equal: " + obj.amount() + "to bank amount: " + value.amount());
+
+
+                    unreconciledTransactions.remove(obj);
+                }
+
+            }
+
+
+
+
+        });
+
+
+        console.log("This is unreconciledTransactions after removal of matched transactions: " + unreconciledTransactions());
+
+    };
+
+
+
+
+
 
 
 
@@ -222,7 +302,12 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
         transactions.push(new Transaction(four.id(), four.name(), four.amount(), four.date()));
 
-        transactions = transactions.sort(function (left, right) { return left.date() == right.date() ? 0 : (left.date() < right.date() ?  - 1 : 1) });  
+        transactions = transactions.sort(function (left, right) {
+            return left.date() == right.date() ? 0 : (left.date() < right.date() ? -1 : 1)
+        });
+        
+        //persistAccountInLocalStorage();
+        
     }
 
 
@@ -303,9 +388,15 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
     exports.persistBankTransactionsInLocalStorage = persistBankTransactionsInLocalStorage;
     exports.runningBankTotal = runningBankTotal;
     exports.retriveBankTransactionsFromLocalStorage = retriveBankTransactionsFromLocalStorage;
+    exports.unreconciledTransactions = unreconciledTransactions;
+    exports.compareAccounts = compareAccounts;
+    exports.unreconciledTotal = unreconciledTotal;
+    exports.persistAccountInLocalStorage = persistAccountInLocalStorage;
 
 
     console.log("exports applied");
 
-    $(document).ready(function(){  alert(myAccount)})
+    $(document).ready(function () {
+        alert(myAccount)
+    })
 });

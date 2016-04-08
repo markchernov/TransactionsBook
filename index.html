@@ -83,6 +83,8 @@
                 </tbody>
             </table>
 
+            <button data-bind="click: persistAccountInLocalStorage" class="btn btn-default">Persist my Account</button>
+            
         </div>
 
 
@@ -223,13 +225,13 @@
 
 
                 </tbody>
-                
-                
-             
-                
+
+
+
+
             </table>
 
-                  <button data-bind="click: retriveBankTransactionsFromLocalStorage" class="btn btn-default">See Bank Transactions</button>
+            <button data-bind="click: retriveBankTransactionsFromLocalStorage" class="btn btn-default">See Bank Transactions</button>
         </div>
 
 
@@ -258,7 +260,51 @@
 
 
 
+        <div class="jumbotron">
 
+
+            <h3>Total number of unreconciled Transactions:
+
+            <span data-bind="text: unreconciledTransactions().length"></span>
+                
+                Unreconciled Balance:
+                
+            <span data-bind="text: unreconciledTotal"></span>
+            
+            </h3>
+
+
+
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Transactions Number</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: unreconciledTransactions">
+                    <tr>
+                        <td data-bind="text: $data.id"></td>
+                        <td data-bind="text: $data.name"></td>
+                        <td data-bind="text: $data.amount"></td>
+                        <td data-bind="text: $data.date"></td>
+                    </tr>
+
+
+
+
+                </tbody>
+
+
+
+
+            </table>
+
+            <button data-bind="click: compareAccounts" class="btn btn-default">Reconcile Transactions</button>
+        </div>
 
 
 
