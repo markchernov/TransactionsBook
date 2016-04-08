@@ -29,7 +29,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
 
     function Account(id, name, description, balance, transactions) {
-
+     
         this.id = ko.observable(id);
         this.name = ko.observable(name);
         this.description = ko.observable(description);
@@ -45,10 +45,12 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
         return ret;
     }
 
+     //var nextid = 1;
+    //var nextid = Math.floor((Math.random() * 1000) + 1);;
+    function Transaction(name, amount, date) {
 
-    function Transaction(id, name, amount, date) {
-
-        this.id = ko.observable(id);
+        this.id = ko.observable(Math.floor((Math.random() * 1000) + 1));
+        //this.id = ko.observable(nextid++);
         this.name = ko.observable(name);
         /*this.amount = ko.observable(parseInt(amount));*/
         this.amount = ko.observable(parseInt(amount)).extend({
@@ -81,10 +83,10 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
     /*******************************************************  
         OBJECTS
       ******************************************************* */
-    var one = new Transaction(1, "Transaction one", 50, "2011-10-10 17:05:14");
-    var two = new Transaction(2, "Transaction two", 650, 1360002924000)
-    var three = new Transaction(3, "Transaction three", 70, moment())
-    var four = new Transaction(4, "Transaction four", 80, new Date())
+    var one = new Transaction("Transaction one", 50, "2011-10-10 17:05:14");
+    var two = new Transaction("Transaction two", 650, 1360002924000)
+    var three = new Transaction("Transaction three", 70, moment())
+    var newTransaction = new Transaction("Transaction four", 80, new Date())
 
 
 
@@ -119,7 +121,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
         var result = 0;
         unreconciledTransactions().forEach(function (value) {
-            result += value.amount();
+            result += Math.abs(value.amount());
         });
         return result;
     });
@@ -166,7 +168,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
         console.log("inside updateBankTransaction function");
 
-        bankTransactions.push(new Transaction(four.id(), four.name(), four.amount(), four.date()));
+        bankTransactions.push(new Transaction(newTransaction.name(), newTransaction.amount(), newTransaction.date()));
 
 
         bankTransactions().forEach(function (value) {
@@ -300,13 +302,13 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
     function addTransaction() {
 
-        transactions.push(new Transaction(four.id(), four.name(), four.amount(), four.date()));
+        transactions.push(new Transaction(newTransaction.name(), newTransaction.amount(), newTransaction.date()));
 
         transactions = transactions.sort(function (left, right) {
             return left.date() == right.date() ? 0 : (left.date() < right.date() ? -1 : 1)
         });
         
-        //persistAccountInLocalStorage();
+        unreconciledTransactions.clear();
         
     }
 
@@ -376,7 +378,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
 
     //  export object to make my data available to knockout   html data-binds  
-    exports.four = four;
+    exports.newTransaction = newTransaction;
     exports.transactions = transactions;
     exports.addTransaction = addTransaction;
     exports.removeTransaction = removeTransaction;
