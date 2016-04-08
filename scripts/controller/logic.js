@@ -4,6 +4,7 @@ if (typeof define !== 'function') {
 
 console.log('in start logic.js');
 
+
 /*******************************************************  
     CONSTRUCTORS
   ******************************************************* */
@@ -12,6 +13,8 @@ console.log('in start logic.js');
 define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 'moment', 'mapping'], function (require, exports, $, ko, validation, moment, mapping) {
 
     console.log('in define logic.js')
+    
+    
 
     /*ko.validation.init({
            insertMessages: false,
@@ -25,15 +28,22 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
 
 
-    function Account(id, name, description, balance) {
+    function Account(id, name, description, balance, transactions) {
 
         this.id = ko.observable(id);
         this.name = ko.observable(name);
         this.description = ko.observable(description);
         this.balance = ko.observable(balance);
+        this.transactions = transactions;
 
 
     }
+    
+    // create custom toString for testing
+     Account.prototype.toString = function accountToString() {
+     var ret = 'Account Id: ' + this.id() + ' , name: ' + this.name() + ', Description: ' + this.description() + ' , Balance:  ' + runningTotal() + " ";
+     return ret;
+}
 
 
     function Transaction(id, name, amount, date) {
@@ -106,7 +116,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
     });
 
 
-    var myAccount = new Account(10001, "Mark Che", " My Checking Account ", runningTotal);
+    var myAccount = new Account(10001, "Mark Che", " My Checking Account ", runningTotal, transactions);
 
 
 
@@ -295,7 +305,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
     exports.retriveBankTransactionsFromLocalStorage = retriveBankTransactionsFromLocalStorage;
 
 
-    console.log("bindings applied");
+    console.log("exports applied");
 
-
+    $(document).ready(function(){  alert(myAccount)})
 });

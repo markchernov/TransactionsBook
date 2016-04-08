@@ -62,7 +62,8 @@
                         <th>Account Number</th>
                         <th>User Name</th>
                         <th>Description</th>
-                        <th>Total</th>
+                        <th>Total $</th>
+                        <th>Transactions #</th>
                     </tr>
                 </thead>
 
@@ -73,6 +74,7 @@
                         <td data-bind="text: myAccount.name()"></td>
                         <td data-bind="text: myAccount.description()"></td>
                         <td data-bind="text: myAccount.balance()"></td>
+                        <td data-bind="text: myAccount.transactions().length"></td>
                     </tr>
 
 
