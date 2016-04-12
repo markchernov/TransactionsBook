@@ -345,7 +345,7 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
         console.log(data);
 
-        var url = 'http://localhost:8080/NutriTrac/rest/food/' + myFood.ndbno();
+        var url = 'http://markche.com:8080/NutriTrac/rest/food/' + myFood.ndbno();
 
         //var url =  'http://feeds.financialcontent.com/account_name/JSQuote?Ticker=MSFT';    
 
@@ -398,7 +398,9 @@ define('controller', ['require', 'exports', 'jquery', 'knockout', 'validation', 
 
     console.log("exports applied");
 
-    $(document).ready(function () {
+  /*  $(document).ready(function () {
         alert(myAccount)
-    })
+    })*/
+    
+  
 });
